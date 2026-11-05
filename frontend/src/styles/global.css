@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{font-family:'DM Sans',Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#f4f3fb;background:#0b0b12;font-synthesis:none;text-rendering:optimizeLegibility;--bg:#0b0b12;--panel:#12121d;--panel-2:#181827;--border:#29283a;--muted:#a09eb7;--purple:#9b7cff;--purple-2:#7855f6;--cyan:#64d8e8;--green:#6fe0b4;--amber:#ffcb78;--red:#ff858e;--radius:18px}
+*{box-sizing:border-box}body{margin:0;min-width:320px;min-height:100vh;background:radial-gradient(ellipse at 10% -15%,rgba(111,73,220,.20),transparent 35%),radial-gradient(ellipse at 100% 0%,rgba(35,129,171,.09),transparent 28%),var(--bg)}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}a{color:inherit;text-decoration:none}::selection{background:#7757e6;color:white}.muted{color:var(--muted)}.eyebrow{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#b9a7ff}.gradient-text{background:linear-gradient(100deg,#d2c4ff,#9e84ff 50%,#70dbe7);-webkit-background-clip:text;background-clip:text;color:transparent}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* Devora theme-matched scrollbar */
+:root {
+  color-scheme: dark;
+  scrollbar-color: #7254bd #11101a;
+  scrollbar-width: thin;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #7254bd #11101a;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #11101a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7254bd;
+  border: 2px solid #11101a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9b7cff;
+}
+
+::-webkit-scrollbar-corner {
+  background: #11101a;
+}
+
+/* Project status controls */
+.card-save.is-saved {
+  background: #49366f;
+  border-color: #8c70d2;
+  color: #e4d8ff;
+}
+
+.card-next-action,
+.card-back-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 9px;
+  padding: 9px 10px;
+  border: 1px solid #51416f;
+  border-radius: 9px;
+  background: #29213e;
+  color: #d9cbff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s;
+}
+
+.card-next-action:hover,
+.card-back-action:hover {
+  background: #382951;
+  border-color: #8a70c6;
+}
+
+.card-next-action svg:last-child {
+  margin-left: auto;
+}
+
+.card-back-action {
+  background: transparent;
+  border-color: #393249;
+  color: #b4aec8;
+}
+
+.card-back-action:hover {
+  color: #e4d8ff;
+}
+
+.status-planning { color: #9bdcf5; }
+.status-in-progress { color: #f2cc86; }
+.status-done { color: #8be4b9; }
+.status-saved { color: #c9b4ff; }

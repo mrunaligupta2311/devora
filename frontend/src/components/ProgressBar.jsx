@@ -1,0 +1,3 @@
+import React from 'react';
+import './ProgressBar.css';
+export default function ProgressBar({value=0,label,small=false}) { const n=Math.max(0,Math.min(100,Number(value)||0));return <div className={`progress-wrap ${small?'progress-small':''}`}>{label&&<div className="progress-label"><span>{label}</span><b>{n}%</b></div>}<div className="progress-track" role="progressbar" aria-valuenow={n} aria-valuemin="0" aria-valuemax="100" aria-label={label||'Progress'}><span style={{width:`${n}%`}}/></div></div>; }

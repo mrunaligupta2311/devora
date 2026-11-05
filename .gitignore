@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Generated files
+backend/src/generated/
+
+# OS files
+.DS_Store
+Thumbs.db
+frontend/test-results-*.png

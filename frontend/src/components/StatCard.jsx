@@ -1,0 +1,3 @@
+import React from 'react';
+import './StatCard.css';
+export default function StatCard({label,value,delta,icon:Icon,tone='purple',note}) { return <div className="stat-card"><div className="stat-top"><span>{label}</span><div className={`stat-icon tone-${tone}`}><Icon size={17}/></div></div><div className="stat-value">{value}</div><div className="stat-foot">{delta&&<b>{delta}</b>}<span>{note||'Across your workspace'}</span></div></div>; }

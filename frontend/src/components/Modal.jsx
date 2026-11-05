@@ -1,0 +1,4 @@
+import React, { useEffect } from 'react';
+import { X } from 'lucide-react';
+import './Modal.css';
+export default function Modal({title,children,onClose,footer}) { useEffect(()=>{const fn=e=>e.key==='Escape'&&onClose();window.addEventListener('keydown',fn);return()=>window.removeEventListener('keydown',fn)},[onClose]);return <div className="modal-backdrop" onMouseDown={e=>e.target===e.currentTarget&&onClose()}><section className="modal-panel" role="dialog" aria-modal="true" aria-label={title}><header><h2>{title}</h2><button className="icon-btn" aria-label="Close dialog" onClick={onClose}><X size={18}/></button></header><div className="modal-content">{children}</div>{footer&&<footer>{footer}</footer>}</section></div>; }

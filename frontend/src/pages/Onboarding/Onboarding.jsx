@@ -1,0 +1,19 @@
+import React,{useState} from 'react';
+import {ArrowRight,Check,Layers3,Sparkles} from 'lucide-react';
+import Button from '../../components/Button.jsx';
+import FieldPill from '../../components/FieldPill.jsx';
+import './Onboarding.css';
+import {useApp} from '../../context/AppContext.jsx';
+const fields=['Frontend','Full-stack','Backend','AI/ML','Mobile App Development','Cybersecurity','Data Science','Game Development','UI/UX Design'];
+const goals=['Portfolio building','Practical problem solving','Technical depth','Product thinking','Interview preparation'];
+export default function Onboarding({go}){const{user,preferences,finishOnboarding,notify,projects=[]}=useApp();const[chosen,setChosen]=useState(preferences.fields?.length?preferences.fields:[]);const[level,setLevel]=useState(preferences.level||'Intermediate');const[goal,setGoal]=useState(preferences.goal||'Portfolio building');const[tech,setTech]=useState(preferences.techStack||[]);const[busy,setBusy]=useState(false);const allTech=[...new Set(projects.flatMap(p=>p.techStack||[]))].slice(0,32);const toggle=(arr,set,v)=>set(arr.includes(v)?arr.filter(x=>x!==v):[...arr,v]);const submit=async()=>{
+ if(busy)return;
+ setBusy(true);
+ try{
+  await finishOnboarding({fields:chosen,level,goal,techStack:tech});
+  notify('Your recommendations are ready.');
+  go('/dashboard');
+ }catch(error){
+  notify(error.message||'Could not save your preferences.');
+ }finally{setBusy(false);}
+};return <div className="onboarding-page"><div className="onboarding-top"><div className="onboarding-brand"><span className="brand-mark"><Layers3 size={20}/></span><b>devora<span>.</span></b></div><span>PERSONALIZE YOUR SPACE</span></div><div className="onboarding-content"><div className="onboarding-progress"><span style={{width:'100%'}}/></div><div className="eyebrow">LET'S MAKE THIS YOURS</div><h1>Good to have you, {user?.name?.split(' ')[0]||'builder'}.</h1><p className="onboarding-intro">A few quick choices help us find projects that fit your skills and what you want to achieve.</p><section className="onboarding-section"><div className="onboarding-section-heading"><div><span>01</span><h2>What do you want to build?</h2></div><small>Choose any that interest you</small></div><div className="onboarding-pills">{fields.map(f=><FieldPill key={f} active={chosen.includes(f)} onClick={()=>toggle(chosen,setChosen,f)}>{chosen.includes(f)&&<Check size={12}/>} {f}</FieldPill>)}</div></section><section className="onboarding-section"><div className="onboarding-section-heading"><div><span>02</span><h2>Where are you right now?</h2></div></div><div className="level-options">{['Beginner','Intermediate','Advanced'].map((l,i)=><button key={l} className={`level-option ${level===l?'selected':''}`} onClick={()=>setLevel(l)}><div className="level-indicator">{i+1}</div><b>{l}</b><small>{['Learning the fundamentals','Comfortable building projects','Ready for complex challenges'][i]}</small>{level===l&&<Check size={15}/>}</button>)}</div></section><section className="onboarding-section"><div className="onboarding-section-heading"><div><span>03</span><h2>What is your main goal?</h2></div></div><div className="goal-options">{goals.map(g=><button key={g} className={`goal-option ${goal===g?'selected':''}`} onClick={()=>setGoal(g)}>{g}{goal===g&&<Check size={14}/>}</button>)}</div></section><section className="onboarding-section"><div className="onboarding-section-heading"><div><span>04</span><h2>Preferred technologies</h2></div><small>Optional · choose a few</small></div><div className="onboarding-pills">{allTech.map(t=><FieldPill key={t} active={tech.includes(t)} onClick={()=>toggle(tech,setTech,t)}>{t}</FieldPill>)}</div></section><div className="onboarding-bottom"><div><Sparkles size={16}/><span>Your preferences can be changed anytime.</span></div><Button size="lg" onClick={submit} disabled={busy}>{busy?'Saving...':'Build my dashboard'} <ArrowRight size={16}/></Button></div></div></div>}
