@@ -1,0 +1,32 @@
+name: Devora Uptime Monitor
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  uptime:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check frontend
+        run: |
+          curl --fail --silent --show-error \
+            --connect-timeout 10 --max-time 30 \
+            --retry 2 --retry-delay 5 \
+            https://devoraprojects.vercel.app/ \
+            --output /dev/null
+
+      - name: Check backend API
+        run: |
+          curl --fail --silent --show-error \
+            --connect-timeout 10 --max-time 30 \
+            --retry 2 --retry-delay 5 \
+            https://devora-kdbr.onrender.com/api/health \
+            --output /dev/null
+
+      # Re-enable database readiness monitoring after the updated
+      # backend containing the public readiness route is deployed.

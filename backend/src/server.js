@@ -4,6 +4,8 @@ import { prisma } from "./config/database.js";
 
 const PORT = process.env.PORT || 5000;
 
+app.locals.prisma = prisma;
+
 async function startServer() {
   try {
     await prisma.$connect();

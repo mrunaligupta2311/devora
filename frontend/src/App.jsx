@@ -18,16 +18,16 @@ import CompletedProjects from './pages/CompletedProjects/CompletedProjects.jsx';
 import HiddenProjects from './pages/HiddenProjects/HiddenProjects.jsx';
 import Profile from './pages/Profile/Profile.jsx';
 import NotFound from './pages/NotFound/NotFound.jsx';
+import Landing from './pages/Landing/Landing.jsx';
 
 const authPages = ['/login', '/signup', '/otp', '/forgot-password'];
 
 function readRoute() {
-  return window.location.hash.replace(/^#/, '') || '/login';
+  return window.location.hash.replace(/^#/, '') || '/';
 }
 
 function RouterApp() {
   const { user, authReady, onboarded, toast, setToast } = useApp();
-
   const [page, setPage] = useState(readRoute);
   const [selectedId, setSelectedId] = useState(null);
 
@@ -37,7 +37,6 @@ function RouterApp() {
     }
 
     setPage(path);
-
     const url = `${window.location.pathname}${window.location.search}#${path}`;
 
     if (replace) {
@@ -55,12 +54,12 @@ function RouterApp() {
     const syncRoute = () => {
       const route = readRoute();
 
-      if (!user && !authPages.includes(route)) {
+      if (!user && route !== '/' && !authPages.includes(route)) {
         go('/login', true);
         return;
       }
 
-      if (user && authPages.includes(route)) {
+      if (user && (route === '/' || authPages.includes(route))) {
         go(onboarded ? '/dashboard' : '/onboarding', true);
         return;
       }
@@ -74,7 +73,6 @@ function RouterApp() {
     };
 
     syncRoute();
-
     window.addEventListener('popstate', syncRoute);
     window.addEventListener('hashchange', syncRoute);
 
@@ -83,6 +81,21 @@ function RouterApp() {
       window.removeEventListener('hashchange', syncRoute);
     };
   }, [authReady, user, onboarded, go]);
+
+  useEffect(() => {
+    if (!authReady) return;
+
+    const privatePage = page !== '/' || Boolean(user);
+    const robots = document.querySelector('meta[name="robots"]');
+
+    if (robots) {
+      robots.content = privatePage ? 'noindex,nofollow' : 'index,follow';
+    }
+
+    document.title = page === '/'
+      ? 'Devora — Discover What You Can Build'
+      : 'Devora — Your Building Space';
+  }, [authReady, page, user]);
 
   if (!authReady) {
     return (
@@ -93,7 +106,8 @@ function RouterApp() {
   }
 
   const render = () => {
-    if (!user || authPages.includes(page)) {
+    if (!user) {
+      if (page === '/') return <Landing go={go} />;
       if (page === '/signup') return <SignUp go={go} />;
       if (page === '/otp') return <OTPVerification go={go} />;
       if (page === '/forgot-password') return <ForgotPassword go={go} />;
@@ -123,18 +137,15 @@ function RouterApp() {
     return <NotFound go={go} />;
   };
 
-  const isAuth = !user || authPages.includes(page);
+  const isPublic = !user || page === '/' || authPages.includes(page);
 
   return (
     <>
-      {isAuth ? (
-        render()
-      ) : (
+      {isPublic ? render() : (
         <AppLayout page={page} go={go}>
           {render()}
         </AppLayout>
       )}
-
       <Toast toast={toast} onClose={() => setToast(null)} />
     </>
   );
