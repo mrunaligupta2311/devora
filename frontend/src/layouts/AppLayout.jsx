@@ -140,7 +140,7 @@ function SearchDialog({ onClose, go, projects }) {
 }
 
 export default function AppLayout({ page, go, children }) {
-  const { user, logout, projectState, projects = [] } = useApp();
+  const { user, logout, projects = [] } = useApp();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -172,8 +172,6 @@ export default function AppLayout({ page, go, children }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const statuses = projectState?.statuses || {};
-  const savedCount = Object.values(statuses).filter(value => value === 'Saved').length;
 
   const doLogout = () => {
     setShowLogoutConfirm(true);
@@ -233,9 +231,6 @@ export default function AppLayout({ page, go, children }) {
               >
                 <Icon size={18} />
                 {!collapsed && <span>{label}</span>}
-                {!collapsed && path === '/saved' && savedCount > 0 && (
-                  <span className="nav-count">{savedCount}</span>
-                )}
               </button>
             ))}
           </div>
