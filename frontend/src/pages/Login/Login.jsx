@@ -18,10 +18,22 @@ export default function Login({ go }) {
     if (loading) return;
 
     setError('');
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(normalizedEmail)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (!password) {
+      setError('Please enter your password.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const account = await loginDemo({ email, password });
+      const account = await loginDemo({ email: normalizedEmail, password });
       await login(account);
       notify('Welcome back to Devora.');
       go('/dashboard');
@@ -72,7 +84,7 @@ export default function Login({ go }) {
           <h2>Welcome back</h2>
           <p className="auth-subtitle">Pick up where your next big idea begins.</p>
 
-          <form onSubmit={submit} className="auth-form">
+          <form onSubmit={submit} className="auth-form" noValidate>
             <label>
               Email address
               <input

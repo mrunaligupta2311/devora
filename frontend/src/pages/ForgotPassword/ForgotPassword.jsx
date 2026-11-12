@@ -31,11 +31,20 @@ export default function ForgotPassword({ go }) {
     event.preventDefault();
     setError('');
     setMessage('');
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(normalizedEmail)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setBusy(true);
 
     try {
-      const registeredEmail = await requestPasswordReset(email);
+      const registeredEmail = await requestPasswordReset(normalizedEmail);
       setEmail(registeredEmail);
+      setOtp('');
       setStep(2);
       setMessage('Verification code sent. Please check your email.');
     } catch (err) {
@@ -48,6 +57,12 @@ export default function ForgotPassword({ go }) {
   const submitOtp = async event => {
     event.preventDefault();
     setError('');
+
+    if (!/^\d{6}$/.test(otp)) {
+      setError('Enter a valid 6-digit verification code.');
+      return;
+    }
+
     setBusy(true);
 
     try {
@@ -78,7 +93,10 @@ export default function ForgotPassword({ go }) {
     setBusy(true);
 
     try {
-      await resetDemoPassword(password);
+      await resetDemoPassword(password, otp);
+      setOtp('');
+      setPassword('');
+      setConfirm('');
       setStep(4);
       setMessage('Your password has been changed successfully.');
     } catch (err) {
@@ -115,7 +133,7 @@ export default function ForgotPassword({ go }) {
             <h1>Forgot your password?</h1>
             <p>Enter the email address associated with your Devora account.</p>
 
-            <form onSubmit={submitEmail}>
+            <form onSubmit={submitEmail} noValidate>
               <label>
                 Email address
                 <input
@@ -144,7 +162,7 @@ export default function ForgotPassword({ go }) {
             <h1>Enter your code</h1>
             <p>Complete the verification step for <b>{email}</b>.</p>
 
-            <form onSubmit={submitOtp}>
+            <form onSubmit={submitOtp} noValidate>
               <label>
                 6-digit verification code
                 <input
@@ -173,7 +191,7 @@ export default function ForgotPassword({ go }) {
             <h1>Create a new password</h1>
             <p>Choose a new password for your Devora account.</p>
 
-            <form onSubmit={submitPassword}>
+            <form onSubmit={submitPassword} noValidate>
               <label>
                 New password
                 <input

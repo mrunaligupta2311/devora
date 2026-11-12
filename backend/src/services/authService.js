@@ -54,8 +54,12 @@ export async function login({ email, password }) {
     where: { email },
   });
 
-  if (!user || !(await argon2.verify(user.passwordHash, password))) {
-    throw new AppError("Invalid email or password.", 401);
+  if (!user) {
+    throw new AppError("No Devora account exists with this email address.", 404);
+  }
+
+  if (!(await argon2.verify(user.passwordHash, password))) {
+    throw new AppError("Incorrect password. Please try again.", 401);
   }
 
   const safeUser = {

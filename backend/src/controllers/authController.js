@@ -102,6 +102,7 @@ export async function logoutController(req, res, next) {
 
 import {
   requestPasswordReset,
+  verifyPasswordResetOtp,
   resetPassword,
 } from "../services/passwordResetService.js";
 
@@ -109,6 +110,15 @@ export async function forgotPasswordController(req, res, next) {
   try {
     const result = await requestPasswordReset(req.validated.body);
     res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function verifyPasswordResetOtpController(req, res, next) {
+  try {
+    const result = await verifyPasswordResetOtp(req.validated.body);
+    return res.status(200).json({ success: true, data: result });
   } catch (error) {
     next(error);
   }

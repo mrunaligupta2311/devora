@@ -10,6 +10,7 @@ import {
   refreshController,
   logoutController,
   forgotPasswordController,
+  verifyPasswordResetOtpController,
   resetPasswordController,
 } from "../controllers/authController.js";
 
@@ -72,6 +73,13 @@ router.post(
   otpLimiter,
   validate(forgotPasswordSchema),
   forgotPasswordController
+);
+
+router.post(
+  "/forgot-password/verify-otp",
+  otpLimiter,
+  validate(verifyOtpSchema),
+  verifyPasswordResetOtpController
 );
 
 router.post(

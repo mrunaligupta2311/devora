@@ -90,6 +90,9 @@ export const currentUser = () => null;
 export const requestPasswordReset = async email => {
   const normalizedEmail = normalizeEmail(email);
 
+  // Remove any OTP left by the previous implementation.
+  sessionStorage.removeItem('devora.passwordResetCode');
+
   await apiRequest('/auth/forgot-password', {
     method: 'POST',
     auth: false,
@@ -101,23 +104,32 @@ export const requestPasswordReset = async email => {
 };
 
 export const verifyPasswordResetOtp = async otp => {
-  if (!/^\d{6}$/.test(String(otp))) {
+  const code = String(otp).trim();
+
+  if (!/^\d{6}$/.test(code)) {
     throw new Error('Enter a valid 6-digit OTP.');
   }
 
-  if (!sessionStorage.getItem('devora.pendingPasswordReset')) {
+  const email = sessionStorage.getItem('devora.pendingPasswordReset');
+
+  if (!email) {
     throw new Error('Password reset session expired. Please try again.');
   }
 
-  sessionStorage.setItem('devora.passwordResetCode', String(otp));
+  await apiRequest('/auth/forgot-password/verify-otp', {
+    method: 'POST',
+    auth: false,
+    body: { email, code }
+  });
+
   return true;
 };
 
-export const resetDemoPassword = async password => {
+export const resetDemoPassword = async (password, otp) => {
   const email = sessionStorage.getItem('devora.pendingPasswordReset');
-  const code = sessionStorage.getItem('devora.passwordResetCode');
+  const code = String(otp || '').trim();
 
-  if (!email || !code) {
+  if (!email || !/^\d{6}$/.test(code)) {
     throw new Error('Password reset session expired. Please start again.');
   }
 

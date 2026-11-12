@@ -76,7 +76,12 @@ export const apiRequest = async (
   const result = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(result.message || 'Something went wrong. Please try again.');
+    const fieldError = Array.isArray(result.errors) ? result.errors[0] : null;
+    throw new Error(
+      fieldError?.message ||
+      result.message ||
+      'Something went wrong. Please try again.'
+    );
   }
 
   return result.data;
