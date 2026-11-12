@@ -1,5 +1,6 @@
 import { prisma } from "../config/database.js";
 import { AppError } from "../utils/AppError.js";
+import { serializeUserProjectState } from "../utils/projectStateSerializer.js";
 
 const levels = {
   Beginner: "BEGINNER",
@@ -248,11 +249,7 @@ export async function getUserProjects(userId, status) {
     orderBy: { updatedAt: "desc" },
   });
 
-  return records.map(({ project, status, ...state }) => ({
-    ...project,
-    ...state,
-    status: displayStatus[status],
-  }));
+  return records.map(serializeUserProjectState);
 }
 
 export async function getDashboard(userId) {
@@ -298,11 +295,7 @@ export async function getDashboard(userId) {
     stats,
     totalAvailableProjects: totalProjects,
     completedMilestones: progressCount,
-    recentProjects: recent.map(({ project, status, ...state }) => ({
-      ...project,
-      ...state,
-      status: displayStatus[status],
-    })),
+    recentProjects: recent.map(serializeUserProjectState),
   };
 }
 

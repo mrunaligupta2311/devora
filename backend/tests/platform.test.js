@@ -48,3 +48,35 @@ test("milestone validation requires a boolean", () => {
   assert.equal(milestoneSchema.safeParse({ completed: true }).success, true);
   assert.equal(milestoneSchema.safeParse({ completed: "yes" }).success, false);
 });
+
+
+import { serializeUserProjectState } from "../src/utils/projectStateSerializer.js";
+
+test("user project serialization preserves the actual project ID", () => {
+  const result = serializeUserProjectState({
+    id: "state-123",
+    userId: "user-123",
+    projectId: "project-456",
+    updatedAt: new Date(),
+    status: "SAVED",
+    project: { id: "project-456", title: "Test Project" },
+  });
+
+  assert.equal(result.id, "project-456");
+  assert.equal(result.status, "Saved");
+  assert.equal(result.userId, "user-123");
+  assert.equal(result.projectId, "project-456");
+});
+
+test("user project serialization maps completed and hidden statuses", () => {
+  const base = { project: { id: "project-1" } };
+
+  assert.equal(
+    serializeUserProjectState({ ...base, status: "DONE" }).status,
+    "Completed"
+  );
+  assert.equal(
+    serializeUserProjectState({ ...base, status: "HIDDEN" }).status,
+    "Hidden"
+  );
+});
